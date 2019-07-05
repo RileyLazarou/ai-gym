@@ -9,8 +9,8 @@ class NN():
 		self.bias1 = np.random.normal(0,np.sqrt(2/(4+32)),(1,32))
 		self.FC2 = np.random.normal(0,np.sqrt(2/(32+16)),(32,16))
 		self.bias2 = np.random.normal(0,np.sqrt(2/(32+16)),(1,16))
-		self.FC3 = np.random.normal(0,np.sqrt(2/(16+1)),(16,1))
-		self.bias3 = np.random.normal(0,np.sqrt(2/(16+1)),(1,1))
+		self.FC3 = np.random.normal(0,np.sqrt(2/(16+2)),(16,2))
+		self.bias3 = np.random.normal(0,np.sqrt(2/(16+2)),(1,2))
 
 
 	def relu(self, X):
@@ -19,6 +19,9 @@ class NN():
 	def sigmoid(self, X):
 		return 1 / (1 + np.exp(-X)) 
 
+	def softmax(self, X):
+		return np.exp(X) / np.sum(np.exp(X))
+
 	def predict_proba(self, X):
 		X = np.array(X).reshape((-1,4))
 		X = X @ self.FC1 + self.bias1
@@ -26,12 +29,13 @@ class NN():
 		X = X @ self.FC2 + self.bias2
 		X = self.relu(X)
 		X = X @ self.FC3 + self.bias3
-		X = self.sigmoid(X)
+		X = self.softmax(X)
 		return X
 
 	def predict(self, X):
 		X = self.predict_proba(X)
-		return 1 * (X > 0.5)
+		return np.argmax(X, axis=1).reshape((-1, 1))
+
 
 	def mutate(self, stdev=0.03):
 		self.FC1 += np.random.normal(0, stdev, self.FC1.shape)

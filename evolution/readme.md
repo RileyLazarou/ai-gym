@@ -3,10 +3,9 @@
 ## Model
 
 A simple neural network was used to solve this problem (Figure 1). It is fully connected (with bias) 
-and uses the ReLU activation function throughout, except for the output layer which uses sigmoid. 
+and uses the ReLU activation function throughout, except for the output layer which uses softmax. 
 The input size of 4 corresponds to the 4 observations CartPole produces at each step. 
-CartPole has two possible actions, so network output less than 0.5 was interpreted as action 0 (move left) 
-and output greater than or eqal to 0.5 was interpreted as action 1 (move right).
+CartPole has two possible actions, which were one-hot encoded as the model's output.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ConorLazarou/ai-gym/master/evolution/cart_pole/examples/network.png" width="200">
