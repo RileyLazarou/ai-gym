@@ -1,2 +1,4 @@
 # ai-gym
-Just goofing around with AI gym
+Reinforcement learning with AI gym
+
+ - [Evolutionary Training](https://github.com/ConorLazarou/ai-gym/tree/master/evolution)
