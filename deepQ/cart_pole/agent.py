@@ -2,7 +2,7 @@ import numpy as np
 from collections import deque
 from tensorflow.keras import layers, Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.contrib.saved_model import load_keras_model
+from tensorflow.keras.models import load_model
 
 class DQNAgent:
 	def __init__(self, state_size, action_size):
@@ -14,7 +14,7 @@ class DQNAgent:
 		self.epsilon_min = 1e-2				# minimum epsilon
 		self.epsilon_decay = 0.995			# epsilon decay rate
 		self.model = self._build_model()	# Q "function"
-		self.memory = deque(maxlen=2000)	# memory for replaying 
+		self.memory = deque(maxlen=1000)	# memory for replaying 
 
 	def _build_model(self):
 		input_layer = layers.Input((self.state_size,))
@@ -63,5 +63,5 @@ class DQNAgent:
 		self.model.save(filename)
 
 	def load_model(self, filename):
-		self.model = load_keras_model(filename)
+		self.model = load_model(filename)
 

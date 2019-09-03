@@ -18,7 +18,9 @@ def test_model(filename):
 
 	for _ in range(1000):
 		env.render()
-		state, _, _, _ = env.step(agent.act(state, explore=False))
+		state, _, done, _ = env.step(agent.act(state, explore=False))
+		if done:
+			break
 
 	env.close()
 
