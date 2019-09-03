@@ -69,6 +69,10 @@ docs/_build/
 # PyBuilder
 target/
 
+
+# DeepQ Models
+*.h5
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

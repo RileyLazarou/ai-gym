@@ -2,6 +2,7 @@ import numpy as np
 from collections import deque
 from tensorflow.keras import layers, Model
 from tensorflow.keras.optimizers import Adam
+from tensorflow.contrib.saved_model import load_keras_model
 
 class DQNAgent:
 	def __init__(self, state_size, action_size):
@@ -18,7 +19,11 @@ class DQNAgent:
 	def _build_model(self):
 		input_layer = layers.Input((self.state_size,))
 		X = layers.Dense(32, activation='relu')(input_layer)
-		X = layers.Dense(32, activation='relu')(X)
+		X = layers.Dense(16, activation='relu')(X)
+		X = layers.concatenate([input_layer, X])
+		X = layers.Dense(16, activation='relu')(X)
+		X = layers.Dense(16, activation='relu')(X)
+		X = layers.concatenate([input_layer, X])
 		output_layer = layers.Dense(self.action_size, activation='linear')(X)
 		model = Model(input_layer, output_layer)
 		model.compile(optimizer=Adam(lr=self.lr), loss='mse')
@@ -26,10 +31,11 @@ class DQNAgent:
 
 	def remember(self, state, action, reward, next_state, done):
 		# Store state, action, reward, next_state, done
+		state = np.array(state).reshape((1, -1))
 		self.memory.append((state, action, reward, next_state, done))
 
-	def act(self, state):
-		if np.random.rand() < self.epsilon:
+	def act(self, state, explore=True):
+		if explore and np.random.rand() < self.epsilon:
 			return np.random.randint(self.action_size)
 		state = np.array(state).reshape((1,-1))
 		estimated_rewards = self.model.predict(state)
@@ -51,4 +57,11 @@ class DQNAgent:
 			self.model.fit(state, target_f, epochs=1, verbose=0)
 		if self.epsilon > self.epsilon_min:
 			self.epsilon = max(self.epsilon_min, self.epsilon*self.epsilon_decay)
+
+
+	def save_model(self, filename):
+		self.model.save(filename)
+
+	def load_model(self, filename):
+		self.model = load_keras_model(filename)
 
