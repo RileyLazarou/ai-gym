@@ -1,14 +1,15 @@
 import gym
-import agent.py
+import numpy as np
+from agent import DQNAgent
 
-episodes = 1000
+episodes = 5000
 max_time = 500
 
 if __name__ == "__main__":
 
 	#initialize
 	env = gym.make("CartPole-v0")
-	agent = DQNAgent(env)
+	agent = DQNAgent(4, 2)
 
 
 	# iterate the game and reset it
@@ -19,7 +20,7 @@ if __name__ == "__main__":
 		state = np.reshape(state, [1, 4])
 
 		#run game for a fixed amount of time
-		for t in range(max_time)
+		for t in range(max_time):
 
 			# take an action for each step
 			action = agent.act(state)
@@ -38,8 +39,6 @@ if __name__ == "__main__":
 				print("Episode: {}/{}, Score: {}".format(e, episodes, t))
 
 				break
-
-
 
 
 		# replay the agent to train it

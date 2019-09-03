@@ -41,14 +41,14 @@ class DQNAgent:
 		return estimated_rewards
 
 	def replay(self, batch_size):
-		minibatch = self.memory[np.random.randint(0, len(self.memory), batch_size)]
+		minibatch = [self.memory[x] for x in np.random.randint(0, len(self.memory), batch_size)]
 		for state, action, reward, next_state, done in minibatch:
 			target = reward
 			if not done:
-				target = reward + self.gamma * np.max(predict_scores(next_state))
+				target = reward + self.gamma * np.max(self.predict_scores(next_state))
 			target_f = self.model.predict(state)
 			target_f[0][action] = target
 			self.model.fit(state, target_f, epochs=1, verbose=0)
-			if self.epsilon > self.epsilon_min:
-				self.epsilon = max(self.epsilon_min, self.epsilon*self.epsilon_decay)
+		if self.epsilon > self.epsilon_min:
+			self.epsilon = max(self.epsilon_min, self.epsilon*self.epsilon_decay)
 
